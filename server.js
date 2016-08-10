@@ -29,44 +29,43 @@ app.param('id', function(req, res, next, id) {
   next();
 });
 
-app.get('/todos', function(req, res) {
-  res.json(todos);
-});
-
-app.get('/todos/:id', function(req, res) {
-  res.json(req.todo);
-});
-
-app.post('/todos', updateId, function(req, res) {
-  var todo = req.body;
-  todos.push(todo);
-  res.json(todo);
-});
-
-app.put('/todos/:id', function(req, res) {
-  var update = req.body;
-
-  if ( update.id ) {
-    delete update.id;
-  }
-
-  var todo = req.todo;
-
-  if ( _.isEmpty(todo) ) {
-    res.send();
-  } else {
-    var updatedTodd = _.assign(todo, update);
-  }
-});
-
-app.delete('/todos/:id', function(req, res) {
-  var todo = req.todo;
-  var todoIndex = req.todoIndex;
-
-  if ( todoIndex ) {
-    todos.splice(todoIndex, 1);
+app.route('/todos')
+  .get(function(req, res) {
+    res.json(todos);
+  })
+  .post(updateId, function(req, res) {
+    var todo = req.body;
+    todos.push(todo);
     res.json(todo);
-  } else {
-    res.send();
-  }
-});
+  });
+
+app.route('/todos/:id')
+  .get(function(req, res) {
+    res.json(req.todo);
+  })
+  .put(function(req, res) {
+    var update = req.body;
+
+    if ( update.id ) {
+      delete update.id;
+    }
+
+    var todo = req.todo;
+
+    if ( _.isEmpty(todo) ) {
+      res.send();
+    } else {
+      var updatedTodd = _.assign(todo, update);
+    }
+  })
+  .delete(function(req, res) {
+    var todo = req.todo;
+    var todoIndex = req.todoIndex;
+
+    if ( todoIndex ) {
+      todos.splice(todoIndex, 1);
+      res.json(todo);
+    } else {
+      res.send();
+    }
+  });
