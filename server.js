@@ -69,3 +69,13 @@ app.route('/todos/:id')
       res.send();
     }
   });
+
+app.use(function(err, req, res, next) {
+  if (err) {
+    res.status(500).send(err);
+  }
+});
+
+app.listen(3000, function() {
+  console.log('Server running at http://localhost:3000');
+});
